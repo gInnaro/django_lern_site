@@ -1,0 +1,98 @@
+{% extends 'main/layout.html' %}
+
+{% block title %}Приложение для дел{% endblock %}
+
+{% block content %}
+
+	<div django-app="TaskManager">
+		<nav class ="navbar is-success" role="navigation" aria-label="main navigation">
+			<div class="navbar-menu ">
+				<div class="navbar-start">
+				<a href="../category"><li class="button"> Категории</li></a>
+				<a href="../todo"><li class="button"> Список дел</li></a>
+				</div>
+			 </div>
+		</nav>
+	<div class="columns has-background-black-ter is-centered has-text-white-bis" style="min-height:101vh;">
+		<!-- на самом деле можно было обойтись и hero, но я обратился к inline-css -->
+		<div class="column is-half">
+			<h1 class="has-text-title"> Список дел </h1>
+			<form action="" method="post">
+				{% csrf_token %}
+				<div class="list is-hoverable">
+					<div class="list-item">
+						<label class="labels-text">
+							<strong class="complete">Наименование</strong>
+						</label>
+						<strong class="category has-text-info labels-text">Категория</strong>
+						<strong class="is-pulled-right labels-text">Дата создание - Дата окончания </strong>
+					</div>
+					{% for todo in todos %}
+					<!-- шаблонный язык django- for loop -->
+					<div class="list-item">
+						<label class="labels">
+							{% if status == 'yes' %}
+							<input type="checkbox" class="checkbox" name="checkedbox" value="{{ todo.id }}">
+							{% endif %}
+							<span class="complete"> {{ todo.title }}</span>
+						</label>
+						<span class="category has-text-info labels"> {{ todo.category }}</span>
+						<strong class="is-pulled-right labels"><i class="fa fa-calendar"></i> {{ todo.created }} -
+							{{ todo.due_date }}</strong>
+					</div>
+					{% endfor %}
+				</div>
+				<!-- csrf для базовой безопасности нашего приложения -->
+				{% if status == 'yes' %}
+					<div class="field has-text-centered">
+						<label for="description" class="label has-text-white-bis">Введите дело</label>
+						<div class="control">
+						   <input type="text" id="description" class="input" placeholder="Чем собираетесь заняться?"
+								name="description" required>
+						</div>
+					</div>
+					<div class="columns">
+						<div class="column">
+							<label for="category">Категории</label>
+							<div class="control">
+								<div class="select">
+									<select id="category" class="select" name="category_select" required>
+										<!--поставишь такой required, и не надо пустые поляв бд валидизировать. Не повторять в продакшене-->
+										<option class="disabled" value="">Выберите категорию дела</option>
+										{% for category in categories %}
+									   <option class="" value="{{ category.name }}" name="{{ category.name }}">
+											{{ category.name }}</option>
+										{% endfor %}
+									</select>
+								</div>
+							</div>
+						</div>
+						<div class="column">
+							<label for="dueDate">Выберите дату</label>
+							<input type="date" id="dueDate" class="input calendar" name="date" required>
+						</div>
+					</div>
+					<div class="column">
+						<div class="field">
+							<button class="button is-primary" name="Add" type="submit">
+								<span class="icon is-small">
+									<i class="fa fa-plus"></i>
+								</span>
+								<span>Добавить задание</span>
+							</button>
+						   <button class="button is-link" name="Delete" formnovalidate="" type="submit">
+								<span class="icon is-small">
+									<i class="fa fa-trash-o"></i>
+								</span>
+								<span>
+									Удалить дело
+								</span>
+							</button>
+						</div>
+					</div>
+				{% endif %}
+
+			</form>
+		</div>
+	</div>
+{% endblock %}

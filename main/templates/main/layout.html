@@ -1,0 +1,46 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>{% block title %}{% endblock %}</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{% static 'main/css/main.css' %}">
+    <link rel="stylesheet" href="{% static 'todolist/css/todolist.css' %}">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css">
+</head>
+<body>
+  <table class="top">
+      <td class="topmenu">
+          <div align="center" class="menu">
+              <ul>
+                  <a href="{% url 'home' %}"><li class="button"><i class="fas fa-home"></i> Главная</li></a>
+                  <a href="{% url 'about' %}"><li class="button"><i class="fas fa-address-card"></i> Обо мне</li></a>
+                  <a href="{% url 'TodoList' %}"><li class="button"><i class="fas fa-newspaper"></i> Заметки</li></a>
+                  <a href=""><li class="button"><i class="fas fa-paper-plane"></i> Плеер</li></a>
+                  {% if user.is_authenticated %}
+                    <li class="usersign">Привет, {{ user.username|default:'Guest' }}</li>
+                    <a href="{% url 'logout' %}"><li class="sign"> Выход</li></a>
+                  {% else %}
+                    <a href="{% url 'signup' %}"><li class="sign"> Регистрация</li></a>
+                    <a href="{% url 'login' %}"><li class="sign"> Вход</li></a>
+                  {% endif %}
+              </ul>
+          </div>
+      </td>
+  <table class="maintable">
+      <td class="middleleft"></td>
+      <td class="middlecenter">
+          <div>
+              {% block content %}
+              {% endblock %}
+          </div>
+      </td>
+      <td class="middleright"></td>
+  </table>
+
+</body>
+</html>
